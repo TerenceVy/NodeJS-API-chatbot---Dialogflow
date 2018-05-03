@@ -1,9 +1,11 @@
-var express = require('express');
-var bodyParser = require('body-parser');
+const express = require('express');
+const bodyParser = require('body-parser');
+const cors = require('cors');
+const fetch = require('node-fetch');
 'use strict';
 
 //cryptage pwd
-var crypto = require('crypto');
+const crypto = require('crypto');
 
 // create express app
 var app = express();
@@ -14,12 +16,12 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse application/json
 app.use(bodyParser.json())
 
-app.use(function (req, res, next) {
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Disable, Authorization");
-    next();
-});
+//option cors
+
+var corsOptions = {
+    origin: '*',
+    optionsSuccessStatus: 200
+}
 
 // Configuring the database
 var dbConfig = require('./config/database.config.js');
@@ -51,7 +53,7 @@ var sha512 = function(password, salt){
 
 //routes:
 require('./src/routes/user.routes.js')(app);
-//require('./src/routes/dialog.routes.js')(app);;
+require('./src/routes/dialog.routes.js')(app);
 
 // listen for requests
 app.listen(3000, function() {

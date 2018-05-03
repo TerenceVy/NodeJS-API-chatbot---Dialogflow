@@ -43,25 +43,24 @@ exports.create = function(req, res) {
 //Connecter un User
 
 exports.connect = function(req, res){
-    if(req.body.user) {
+    if(req.body.user == 'test') {
 	var password = req.body.password.toString();
 	password = crypto.createHmac('sha256', password)
 	    .update('I love cupcakes')
 	    .digest('hex');
-	console.log(password)
+	User.findOne({ 'user': req.body.user, 'password': password }, function(err, user){
+	    	    if (user != 0){
+		return res.send({ message: "Bonne connexion !" });
 	
-	User.findOne({ 'user': req.params.user, 'password': password }), function(err, user){
-	    console.log('NOOOONNNNNN');
-	    if(err){
-		console.log(err);
-		return res.send({ message: "Bad Name or password !" });
-	    }else{
-		res.send(user);
+	    }
+	    else {
+		console.log('mauvais mdp ou username');
 	    }
 	    
-	}
+	})
     }
-    return res.status(400).send({message: "Remplissez tout les champs"});
+    else
+	return res.status(400).send({message: "Remplissez tout les champs"});
 }
 
 //afficher un user specifique
